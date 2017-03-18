@@ -14,10 +14,12 @@
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
+    "less": "^2.7.2",
     "less-loader": "^3.0.0",
     "morgan": "~1.7.0",
     "sequelize": "^3.30.2",
     "serve-favicon": "~2.3.2",
+    "sqlite3": "^3.1.8",
     "style-loader": "^0.14.1"
   },
   "devDependencies": {
