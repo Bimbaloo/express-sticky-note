@@ -10,6 +10,7 @@ router.get('/notes', function(req, res, next) {
   // }
 
   Note.findAll({raw: true}).then(function(notes) {
+    console.log(notes)
     res.send({status: 0, data: notes});
   }).catch(function(){
     res.send({ status: 1,errorMsg: '数据库异常'});
