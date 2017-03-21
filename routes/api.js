@@ -4,59 +4,64 @@ var Note = require('../models/note')
 
 /* 获取所有的 notes */
 
-function error(res) {
-  res.send({
-    status: 1,
-    errorMsg: '数据库异常'
-  })
-}
-
 router.get('/notes', function(req, res, next) {
-  var ret = {
-    status: 0
-  }
+  // if(!req.session || !req.session.user){
+  //   return res.send({status: 1, errorMsg: '请先登录'})
+  // }
+
   Note.findAll({raw: true}).then(function(notes) {
-    ret.data = notes;
-    console.log(notes)
-    res.send(ret);
+    res.send({status: 0, data: notes});
   }).catch(function(){
-    error(res);
-  })
+    res.send({ status: 1,errorMsg: '数据库异常'});
+  });
 });
 
 /*新增note*/
 router.post('/notes/add', function(req, res, next){
+  if(!req.session || !req.session.user){
+    return res.send({status: 1, errorMsg: '请先登录'})
+  }
   if (!req.body.note) {
     return res.send({status: 2, errorMsg: '内容不能为空'});
   }
   var note = req.body.note;
-  Note.create({text: note}).then(function(){
+  var uid = req.session.user.id;
+  console.log({text: note, uid: uid})
+  Note.create({text: note, uid: uid}).then(function(){
     res.send({status: 0})
   }).catch(function(){
-    error(res)
+    res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
   })
 })
 
 /*修改note*/
 router.post('/notes/edit', function(req, res, next){
+  if(!req.session || !req.session.user){
+    return res.send({status: 1, errorMsg: '请先登录'})
+  }
   var noteId = req.body.id;
   var note = req.body.note;
-  Note.update({text: note}, {where:{id: noteId}}). then(function(){
-    console.log('save ok')
+  var uid = req.session.user.id;
+  Note.update({text: note}, {where:{id: noteId, uid: uid}}).then(function(){
+    res.send({status: 0})
   }).catch(function(e){
-    console.log('delete error')
+    res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
   })
 })
 
 /*删除note*/
 router.post('/notes/delete', function(req, res, next){
+  if(!req.session || !req.session.user){
+    return res.send({status: 1, errorMsg: '请先登录'})
+  }
+
   var noteId = req.body.id
-  console.log(noteId)
-  var note = Note.build
+  var uid = req.session.user.id;
+
   Note.destroy({where:{id:noteId}}).then(function(){
     res.send({status: 0})
   }).catch(function(e){
-    console.log('delete error')
+    res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
   })
 })
 

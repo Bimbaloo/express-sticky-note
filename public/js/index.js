@@ -3025,9 +3025,9 @@ Note.prototype = {
         note: msg
       }).done(function(ret){
       if(ret.status === 0){
-        console.log('update success');
+        Toast('update success');
       }else{
-        console.log(ret.errorMsg);
+        Toast(ret.errorMsg);
       }
     })
   },
@@ -3041,6 +3041,8 @@ Note.prototype = {
           self.id = ret.data.id;
           Toast('add success');
         }else{
+          self.$note.remove();
+          Event.fire('waterfall')
           Toast(ret.errorMsg);
         }
       });
