@@ -29,6 +29,7 @@ router.post('/notes/add', function(req, res, next){
   var uid = req.session.user.id;
   console.log({text: note, uid: uid})
   Note.create({text: note, uid: uid}).then(function(){
+    console.log(arguments)
     res.send({status: 0})
   }).catch(function(){
     res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
@@ -44,6 +45,7 @@ router.post('/notes/edit', function(req, res, next){
   var note = req.body.note;
   var uid = req.session.user.id;
   Note.update({text: note}, {where:{id: noteId, uid: uid}}).then(function(){
+    console.log(arguments)
     res.send({status: 0})
   }).catch(function(e){
     res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
@@ -59,7 +61,8 @@ router.post('/notes/delete', function(req, res, next){
   var noteId = req.body.id
   var uid = req.session.user.id;
 
-  Note.destroy({where:{id:noteId}}).then(function(){
+  Note.destroy({where:{id:noteId, uid: uid}}).then(function(){
+    console.log(arguments)
     res.send({status: 0})
   }).catch(function(e){
     res.send({ status: 1,errorMsg: '数据库异常或者你没有权限'});
