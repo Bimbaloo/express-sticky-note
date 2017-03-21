@@ -5,11 +5,12 @@ var Note = require('../models/note')
 /* 获取所有的 notes */
 
 router.get('/notes', function(req, res, next) {
-  // if(!req.session || !req.session.user){
-  //   return res.send({status: 1, errorMsg: '请先登录'})
-  // }
+  var opts = {raw: true}
+  if(req.session && req.session.user){
+    opts.where = {uid:req.session.user.id }
+  }
 
-  Note.findAll({raw: true}).then(function(notes) {
+  Note.findAll(opts).then(function(notes) {
     console.log(notes)
     res.send({status: 0, data: notes});
   }).catch(function(){
